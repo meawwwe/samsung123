@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+bool bipartite(bool graph[][1000], int src, int visited[], int n)
+{
+    visited[src] = 1;
+    queue <int> q;
+    q.push(src);
+
+    while (!q.empty())
+    {
+        int u = q.front();
+        q.pop();
+
+        if (graph[u][u] == 1)
+           return false;
+
+        for (int v = 0; v < n; ++v)
+        {
+            if (graph[u][v] && visited[v] == -1)
+            {
+                visited[v] = 1 - visited[u];
+                q.push(v);
+            }
+
+            else if (graph[u][v] && visited[v] == visited[u])
+                return false;
+        }
+    }
+    return true;
+}
+
+int main()
+{
+    int t,n,m,i,j,x,y;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n>>m;
+
+        bool graph[n][1000];
+        int visited[n];
+        for(i=0;i<n;i++)
+        {
+            for(j=0;j<n;j++)
+                graph[i][j]=0;
+            visited[i]=-1;
+        }
+
+        for(i=0;i<m;i++)
+        {
+            cin>>x>>y;
+            graph[x-1][y-1]=1;
+            graph[y-1][x-1]=1;
+        }
+        bool p = bipartite(graph,0,visited,n);
+        if(p)
+        {
+            for(i=0;i<n;i++)
+            {
+                if(visited[i] == 1)
+                    cout<<i+1<<' ';
+            }
+        }
+        else
+            cout<<-1;
+        cout<<endl;
+    }
+   return 0;
+   }

@@ -1,0 +1,75 @@
+#include<iostream>
+using namespace std;
+int row,col,a[100][100],visited[100][100],loc[100][2],sol=99999;
+void research(int x,int y,int x1,int y1,int count)
+{
+   // cout<<x<<" "<<y<<endl;
+    if(x==x1 && y==y1){
+        if(count<sol)
+            sol=count;
+        return;
+    }
+    if( x<0 || x>=row || y<0 || y>=col || visited[x][y]==1 || a[x][y]==0)
+        return;
+    visited[x][y]=1;
+    research(x,y+1,x1,y1,count+1);
+    research(x,y-1,x1,y1,count+1);
+    research(x-1,y,x1,y1,count+1);
+    research(x+1,y,x1,y1,count+1);
+}
+int main()
+{
+    int t,index=1;
+    cin>>t;
+    while(t--)
+    {
+        cin>>row>>col;
+        for(int i=0;i<row;i++)
+        {
+            for(int j=0;j<col;j++)
+            {
+                cin>>a[i][j];
+                visited[i][j]=0;
+            }
+        }
+        int rare;
+        cin>>rare;
+        for(int i=0;i<rare;i++)
+            cin>>loc[i][0]>>loc[i][1];
+        
+        int longest=0,maxDist[row*col],longIndex;
+        for(int i=0;i<row;i++)
+        {
+            for(int j=0;j<col;j++)
+            {
+                if(a[i][j]==1){
+                    
+                    for(int k=0;k<rare;k++){
+                        research(i,j,loc[k][0],loc[k][1],0);
+                        if(sol>longest)
+                            longest=sol;
+                        sol=99999;
+                        
+                        for(int i=0;i<row;i++)
+                        {
+                            for(int j=0;j<col;j++)
+                                visited[i][j]=0;
+                        }
+                    }
+                    maxDist[longIndex]=longest;
+                    longIndex++;
+                }
+                longest=0;
+            }
+        }
+        int ans=99999;
+        for(int i=0;i<longIndex;i++)
+        {
+            if( maxDist[i]<ans)
+                ans=maxDist[i];
+        }
+        cout<<"#"<<index<<" "<<ans<<endl;
+        index++;
+    }
+    return 0;
+}

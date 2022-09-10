@@ -1,0 +1,90 @@
+#include<iostream>
+using namespace std;
+int n,m;
+int countSetBits(int i,int b[])
+{
+    int j=0,ans=0;
+    while(i!=0){
+        ans+=i&1;
+        b[j++]=i&1;
+        i/=2;
+    }
+    return ans;
+}
+int maximum(int b[],int arr[])
+{
+    int ans=-99999,j=0,tempSum=0;
+    while( j<m && b[j]==0)
+        tempSum+=arr[j++];
+    for(;j<m;)
+    {
+        int sum=0;
+        if(b[j]==1){
+            sum+=arr[j++];
+            while(j<m && b[j]==0)
+                sum+= arr[j++];
+            if(j==m){
+                if((sum+tempSum)>ans)
+                    ans=sum+tempSum;
+                break;
+            }
+        }
+        if(sum>ans)
+            ans=sum;
+    }
+    return ans;
+}
+int minimum(int b[],int arr[])
+{
+    int ans=99999,j=0,tempSum=0;
+    while( j<m && b[j]==0)
+        tempSum+=arr[j++];
+    for(;j<m;)
+    {
+        int sum=0;
+        if(b[j]==1){
+            sum+=arr[j++];
+            while(j<m && b[j]==0)
+                sum+= arr[j++];
+            if(j==m){
+                if((sum+tempSum)<ans)
+                    ans=sum+tempSum;
+                break;
+            }
+        }
+        if(sum<ans)
+            ans=sum;
+    }
+    return ans;    
+}
+int main()
+{
+    int t,index=1;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n>>m;
+        int arr[m];
+        for(int i=0;i<m;i++)
+            cin>>arr[i];
+        
+        int ans=99999;
+        for(int i=0;i<(1<<m);i++){
+            int b[m];
+            for(int j=0;j<m;j++)
+                b[j]=0;
+                
+            if(countSetBits(i,b)>n || countSetBits(i,b)<n)
+                continue;
+            
+            int maxi=maximum(b,arr);
+            int mini=minimum(b,arr);
+            //cout<<i<<" "<<mini<<" "<<maxi<<endl;
+            if(( maxi-mini)< ans)
+                ans=maxi-mini;
+        }
+        cout<<"#"<<index<<" "<<ans<<endl;
+        index++;
+    }
+    return 0;
+}

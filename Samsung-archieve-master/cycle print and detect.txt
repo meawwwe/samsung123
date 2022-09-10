@@ -1,0 +1,75 @@
+#include<iostream>
+using namespace std;
+int n,m,a[100][100],visit[100],st[100],flag=0,start,en,ix,path[100];
+bool isCyclic(int i)
+{
+    st[i]=1;
+    path[ix++]=i;
+    visit[i]=1;
+    for(int j=0;j<n;j++){
+        if(a[i][j]==1){
+            if( visit[j]==0 && isCyclic(j))
+                return true;
+            else if( st[j]==1){
+                //path[ix++]=i;
+                en=i;
+                return true;
+            }
+        }
+    }
+    st[i]=0;
+    return false;
+}
+int main()
+{
+    int t,index=1;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n>>m;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<n;j++)
+                a[i][j]=0;
+            visit[i]=0;
+        }
+        for(int i=0;i<m;i++)
+        {
+            int x,y;
+            cin>>x>>y;
+            a[x][y]=1;
+        }
+        
+        for(int i=0;i<n;i++)
+        {
+            if(visit[i]==false){
+                for(int j=0;j<n;j++)
+                    st[j]=0;
+                ix=0;
+                if( isCyclic(i)){
+                    flag=1;
+                    break;
+                }
+            }
+        }
+        if(flag){
+            cout<<"#"<<index<<" "<<"1"<<endl;
+            for(int i=0;i<n;i++)
+            {
+               if(st[i]==1 && a[en][i]==1)
+                start=i;
+            }
+            int k=0;
+            while(k<ix && path[k]!=start)
+                k++;
+            for(;k<ix;k++)
+                cout<<path[k]<<" ";
+            cout<<endl;
+        }
+        else
+            cout<<"#"<<index<<" "<<"0"<<endl;
+        
+        index++;
+    }
+    return 0;
+}

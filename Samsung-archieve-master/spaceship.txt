@@ -1,0 +1,80 @@
+#include<iostream>
+using namespace std;
+int a[10][5],given[10][5],n,maxi=-1;
+void space(int row,int col,int bomb,int res)
+{
+    if(col<0 || col>4){
+        if(res>maxi)
+            maxi=res;
+        return;
+    }
+
+    if(row==0){
+        if(res>maxi)
+            maxi=res;
+        return;
+    }
+    if(bomb==0){
+        for(int i=row-1;i>=(row-5) && i>=0;i--){
+            for(int j=0;j<5;j++){
+                if( a[i][j]==2)
+                    a[i][j]=0;
+            }
+        }
+        
+        space( row-1,col,1,res+a[row-1][col]);
+        
+        for(int i=row-1;i>=(row-5) && i>=0;i--){
+            for(int j=0;j<5;j++){
+                if( given[i][j]==2)
+                    a[i][j]=given[i][j];
+            }
+        }    
+    }
+    
+    if(col>=1){
+        if(a[row-1][col-1]==2){
+            if(res>maxi)
+                maxi=res;
+            return;
+        }
+        else
+            space(row-1,col-1,bomb,res+a[row-1][col-1]);
+    }
+    if(col<=3){
+        if(a[row-1][col+1]==2){
+            if(res>maxi)
+                maxi=res;
+            return;
+        }
+        else
+            space(row-1,col+1,bomb,res+a[row-1][col+1]);
+    }
+    
+    if(a[row-1][col]==2)
+        return;
+    else
+            space(row-1,col,bomb,res+a[row-1][col]);
+}
+int main()
+{
+    int t,index=1;
+    cin>>t;
+    while(t--)
+    {
+        cin>>n;
+        for(int i=0;i<n;i++)
+        {
+            for(int j=0;j<5;j++)
+            {
+                cin>>given[i][j];
+                a[i][j]=given[i][j];
+            }
+        }
+        
+        space(n,2,0,0);
+        cout<<"#"<<index<<" "<<maxi<<endl;
+        index++;
+    }
+    return 0;
+}
